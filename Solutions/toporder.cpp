@@ -21,11 +21,11 @@ struct Node {
 
 void printGraph(vector<Node> *graph);
 
-void topSort(Node *node, int depth);
+void topSortSquare(Node *node, int depth);
 
 //set<pair<int, int>> lValNodeValVector+ù
 
-void visit(Node *node, stack<int> *tmpStack);
+void topSortLinear(Node *node, stack<int> *tmpStack);
 
 int main() {
     ifstream in("input.txt");
@@ -51,7 +51,7 @@ int main() {
     stack<int> tmpStack;
     for (auto &node : graph) {
         if (!node.isVisited) {
-            visit(&node, &tmpStack);
+            topSortLinear(&node, &tmpStack);
         }
     }
 
@@ -69,28 +69,28 @@ int main() {
         out << pair.second << " ";
     }
     */
-    
+
     //printGraph(&graph);
     return 0;
 }
 
-void visit(Node *node, stack<int> *tmpStack) {
+void topSortLinear(Node *node, stack<int> *tmpStack) {
     if (!node->isVisited) {
         for (auto &vic : node->vic) {
-            visit(vic, tmpStack);
+            topSortLinear(vic, tmpStack);
         }
         node->isVisited = true;
         tmpStack->push(node->value);
     }
 }
 
-void topSort(Node *node, int depth) {
+void topSortSquare(Node *node, int depth) {
     node->isVisited = true;
     node->lVal = max(node->lVal, depth);
 
     depth++;
     for (auto &vic : node->vic) {
-        topSort(vic, depth);
+        topSortSquare(vic, depth);
     }
 }
 
