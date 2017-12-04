@@ -10,13 +10,12 @@ struct Node {
     unsigned int value = 0;
     int depth = 0;
     vector<Node *> vic;
-    vector<Node *> fathers;
     bool isVisited = false;
 
     // Tarjan
     int lowkey = 0;
     bool onStack = false;
-    
+
     // main algorithm
     int rightPaths = 0;
 
@@ -56,7 +55,6 @@ int main() {
         in >> from >> to;
         // pushing nodes
         graph[from].vic.push_back(&graph[to]);
-        graph[to].fathers.push_back(&graph[from]);
     }
     // inserting values
     for (unsigned int k = 0; k < N; ++k) {
@@ -94,8 +92,8 @@ vector<Node> *shrinkGraph(Node *node, unsigned int size) {
 
 void insertMergedNodes(vector<Node> *newGraph, Node *node, Node *father, int actualComponentID) {
     node->isVisited = true;
-    //cout << node->value << ": ";
-
+    int tmpValue = node->representative->value;
+    
     // changing component
     if (node->representative->value != actualComponentID) {
         actualComponentID = node->representative->value;
@@ -104,15 +102,9 @@ void insertMergedNodes(vector<Node> *newGraph, Node *node, Node *father, int act
 
     // general enemy insertion
     for (auto &vic : node->vic) {
-        //cout << vic->value << " ID: " <<vic->strongCompId << " | ";
-        if (vic->representative->value != node->representative->value) {
-            newGraph->at(node->representative->value).vic.push_back(&newGraph->at(vic->representative->value));
+        if (vic->representative->value != tmpValue) {
+            newGraph->at(tmpValue).vic.push_back(&newGraph->at(vic->representative->value));
         }
-    }
-    //cout << endl;
-
-    // RECURSION
-    for (auto &vic : node->vic) {
         if (!vic->isVisited) {
             insertMergedNodes(newGraph, vic, father, actualComponentID);
         }
@@ -187,9 +179,6 @@ void printGraph(vector<Node> *graph) {
             out << vic->value << " ";
         }
         out << " | F: ";
-        for (auto &father : node.fathers) {
-            out << father->value << " ";
-        }
         if (node.representative != nullptr) {
             out << "REP: " << node.representative->value;
         }
