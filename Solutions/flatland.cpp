@@ -26,19 +26,13 @@ ifstream in("input.txt");
 ofstream out("output.txt");
 
 int main() {
-    /*
-    //1 Fattoriale iterativo e ricorsivo
-    Exercise *e1 = new Exercise(1);
-    int n = 4;
-    //cout << "Iterative factorial of " << n << " is " << fact_iter(4) << endl;
-    //cout << "Recursive factorial of " << n << " is " << fact_rec(4) << endl;
-    e1->finito();
-*/
     in >> size;
     backupSize = size;
+    
     vector<pair<int, char>> triangles;
     triangles.resize(size);
     //backupTriangles.resize(size);
+    
     pair<int, char> tmp;
     for (int i = 0; i < size; ++i) {
         in >> tmp.second;
